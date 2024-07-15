@@ -3,10 +3,12 @@ package com.act.playground.spring_crud.service;
 import java.util.List;
 import java.util.Optional;  
 import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import com.act.playground.spring_crud.Repository.UserRepository;
+
 import com.act.playground.spring_crud.model.User;
 import com.act.playground.spring_crud.response.GeneralResponse;
 
@@ -18,6 +20,13 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
     private PasswordEncoder passwordEncoder=new BCryptPasswordEncoder();
+
+  
+    //private JwtTokenProvider jwtTokenProvider;
+    // private AuthenticationManager authenticationManager;
+    // @Autowired
+    // private UserDetailsService userDetailsService;
+    
     
 
     public GeneralResponse registerUser(String email,String fullname,String phone,String password){
@@ -95,23 +104,66 @@ public class UserService {
         }
 
     }
+    private boolean isUserDetailsChanged(Optional<User> existingUserOptional, User userUpdateRequest) {
+        if (existingUserOptional.isPresent()) {
+            User existingUser = existingUserOptional.get();
+            boolean isPasswordUpdated = !this.passwordEncoder.matches(userUpdateRequest.getPassword(), existingUser.getPassword());
+            return !existingUser.getFullname().equals(userUpdateRequest.getFullname())
+                    || !existingUser.getEmail().equals(userUpdateRequest.getEmail())
+                    || !existingUser.getPhone().equals(userUpdateRequest.getPhone())
+                    || isPasswordUpdated;
+        } else {
+            return true; 
+        }
+    }
 
     public GeneralResponse updatedUser(Long id,User updatedUser){
         Optional<User> userOptional = userRepository.findById(id);
         if (userOptional.isPresent()) {
             User user = userOptional.get();
-            String hashPassword = this.passwordEncoder.encode(updatedUser.getPassword());
+            
+                if ((updatedUser.getPassword()).length() < 8) {
+                    return new GeneralResponse("password must be atleast 8 character", false);
+                }
+                if ((updatedUser.getPhone()).length() != 10) {
+                    return new GeneralResponse("phone number must be 10 digit", false);
+                }
+                if (!(updatedUser.getPhone().startsWith("09") || updatedUser.getPhone().startsWith("07"))) {
+                    return new GeneralResponse("phone number must starts with 09 or 07", false);
+                }
+
+            if (isUserDetailsChanged(userOptional,updatedUser)) {
+                String hashPassword = this.passwordEncoder.encode(updatedUser.getPassword());
     
-            user.setEmail(updatedUser.getEmail());
-            user.setFullname(updatedUser.getFullname());
-            user.setPassword(hashPassword);
-            user.setPhone(updatedUser.getPhone());
-    
-            User savedUser = userRepository.save(user);
-            return new GeneralResponse("User updated successfully ", true,savedUser);
+                user.setEmail(updatedUser.getEmail());
+                user.setFullname(updatedUser.getFullname());
+                user.setPassword(hashPassword);
+                user.setPhone(updatedUser.getPhone());   
+                User savedUser = userRepository.save(user);
+                return new GeneralResponse("User updated successfully ", true,savedUser);
+            }
+            else{
+                return new GeneralResponse("there is no user detail change ", false);
+            }
+            
         } else {
             return new GeneralResponse("User not found with id: " + id, false);
         }
 
     }
+   
+     
+    //public  GeneralResponse login( User user){
+    //     Authentication authentication=authenticationManager.authenticate(
+    //         new UsernamePasswordAuthenticationToken(
+    //             user.getFullname(),
+    //             user.getPassword()
+    //         )
+    //     );
+        
+    //     UserDetails userDetails=userDetailsService.loadUserByUsername(user.getFullname());
+    //     //String token=jwtTokenProvider.generateToken(authentication);
+    //     return new GeneralResponse("token", true);
+
+    //}
 }
