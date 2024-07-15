@@ -33,7 +33,7 @@ public class UserController {
     // User registeredUser=userService.registerUser(user);
 
     public ResponseEntity<GeneralResponse> registerUser(@RequestBody User user) {
-        return new ResponseEntity<>(userService.registerUser(user), HttpStatus.OK);
+        return new ResponseEntity<>(userService.registerUser(user.getEmail(),user.getFullname(),user.getPhone(),user.getPassword()), HttpStatus.OK);
     }
 
     @GetMapping("/allUser")
