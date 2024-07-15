@@ -42,7 +42,7 @@ public class UserController {
         return ResponseEntity.ok(allUser);
     }
 
-    @GetMapping("user/{id}")
+    @GetMapping("/user/{id}")
     public ResponseEntity<GeneralResponse> getUserByIde(@PathVariable long id) {
         Optional<GeneralResponse> user = userService.getUserById(id);
         return user.map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());

@@ -1,6 +1,7 @@
 package com.act.playground.spring_crud.model;
 
 
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -16,12 +17,10 @@ public class User {
     private long id;
 
     
-    
- 
-    
     @Column(name = "email", nullable = false, unique = true)
     private String email;
 
+    
     @Column(name = "fullname",nullable = false)
     private String fullname;
 

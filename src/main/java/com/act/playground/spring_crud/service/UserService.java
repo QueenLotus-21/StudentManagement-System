@@ -10,6 +10,8 @@ import com.act.playground.spring_crud.Repository.UserRepository;
 import com.act.playground.spring_crud.model.User;
 import com.act.playground.spring_crud.response.GeneralResponse;
 
+import ch.qos.logback.core.util.StringUtil;
+
 
 @Service
 public class UserService {
@@ -23,7 +25,16 @@ public class UserService {
             if (userRepository.existsByEmail(user.getEmail())) {
                 return new GeneralResponse("user already exist", false,user);    
             }
-          
+            
+            boolean username=StringUtil.isNullOrEmpty(user.getFullname()) ;
+            boolean email=StringUtil.isNullOrEmpty(user.getEmail()) ;
+            boolean phone=StringUtil.isNullOrEmpty(user.getPhone()) ;
+            boolean password=StringUtil.isNullOrEmpty(user.getPassword()) ;
+            if(username || email || phone || password){
+                return new GeneralResponse("please provide all fields", false);
+            }
+
+
            // User user = new User();
            String hashPassword= this.passwordEncoder.encode(user.getPassword());
             user.setEmail(user.getEmail());
