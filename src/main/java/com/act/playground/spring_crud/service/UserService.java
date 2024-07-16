@@ -8,11 +8,12 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import com.act.playground.spring_crud.Repository.UserRepository;
-
+import com.act.playground.spring_crud.Token.JwtUtil;
 import com.act.playground.spring_crud.model.User;
 import com.act.playground.spring_crud.response.GeneralResponse;
 
 import ch.qos.logback.core.util.StringUtil;
+import jakarta.servlet.http.HttpServletResponse;
 
 
 @Service
@@ -20,6 +21,7 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
     private PasswordEncoder passwordEncoder=new BCryptPasswordEncoder();
+    
 
   
     //private JwtTokenProvider jwtTokenProvider;
@@ -157,13 +159,15 @@ public class UserService {
       if ( userRepository.existsByEmail(email)) {
         try {
             User user= userRepository.findByEmail(email);
-            //String pass=passwordEncoder.encode(password);
             boolean isValid=email.equalsIgnoreCase(user.getEmail()) 
             && passwordEncoder.matches(password,user.getPassword());
 
             if (isValid) {
-                return new GeneralResponse("login sucessfull", true,user);
-            }
+                //generate token
+                String jwtToken=JwtUtil.generateToken(user);
+                return new GeneralResponse(jwtToken, true);
+                //return new GeneralResponse("login sucessfull" +jwtToken, true,user);
+            } 
             else{
                 return new GeneralResponse("Access Denied,Invalid Credencial", false);
             }
@@ -179,9 +183,17 @@ public class UserService {
       }
         
     }
-
+public void setAuthorizationHeader(HttpServletResponse response, GeneralResponse generalResponse) {
+        if (generalResponse.isSuccess()) {
+            // Set the Authorization header in the response
+            response.setHeader("Authorization", "Bearer " + generalResponse.getMessage().toString());
+        } else {
+            // Set the response status to 401 Unauthorized
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+        }
+    }
      
-    //public  GeneralResponse login( User user){
+    //public  GeneralResponse login(user){
     //     Authentication authentication=authenticationManager.authenticate(
     //         new UsernamePasswordAuthenticationToken(
     //             user.getFullname(),

@@ -7,6 +7,8 @@ import com.act.playground.spring_crud.model.User;
 import com.act.playground.spring_crud.response.GeneralResponse;
 import com.act.playground.spring_crud.service.UserService;
 
+import jakarta.servlet.http.HttpServletResponse;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -41,8 +43,10 @@ public class UserController {
 
     @PostMapping("/login")
     // public ResponseEntity<GeneralResponse> login(@RequestParam("email")String email,@RequestParam("password")String password) {
-        public ResponseEntity<GeneralResponse> login(@RequestBody User user) {
-        return new ResponseEntity<>(userService.login(user.getEmail(),user.getPassword()), HttpStatus.OK);
+        public ResponseEntity<GeneralResponse> login(@RequestBody User user ,HttpServletResponse response)  {
+            GeneralResponse loginResponse=userService.login(user.getEmail(),user.getPassword());
+            userService.setAuthorizationHeader(response, loginResponse);
+        return ResponseEntity.ok(loginResponse);
     }
     
 
