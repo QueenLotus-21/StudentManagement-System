@@ -22,15 +22,7 @@ public class UserService {
     private UserRepository userRepository;
     private PasswordEncoder passwordEncoder=new BCryptPasswordEncoder();
     
-
-  
-    //private JwtTokenProvider jwtTokenProvider;
-    // private AuthenticationManager authenticationManager;
-    // @Autowired
-    // private UserDetailsService userDetailsService;
     
-    
-
     public GeneralResponse registerUser(String email,String fullname,String phone,String password){
         try {
             
@@ -38,14 +30,13 @@ public class UserService {
                 return new GeneralResponse("user already existed", false);    
             }
             
-            boolean username=StringUtil.isNullOrEmpty(fullname) ;
-            boolean emailV=StringUtil.isNullOrEmpty(email) ;
-            boolean phoneV=StringUtil.isNullOrEmpty(phone) ;
-            boolean passwordV=StringUtil.isNullOrEmpty(password) ;
+            boolean username=StringUtil.isNullOrEmpty(fullname);
+            boolean emailV=StringUtil.isNullOrEmpty(email);
+            boolean phoneV=StringUtil.isNullOrEmpty(phone);
+            boolean passwordV=StringUtil.isNullOrEmpty(password);
             if(username || emailV || phoneV || passwordV){
                 return new GeneralResponse("please provide all fields", false);
             }
-
             if (password.length() <8) {
                 return new GeneralResponse("password must be atleast 8 character", false);
             }
@@ -57,18 +48,12 @@ public class UserService {
                 return new GeneralResponse("Phone number must start with 09 or 07", false);
             }
 
-
            User user = new User();
            String hashPassword= this.passwordEncoder.encode(password);
             user.setEmail(email );
             user.setFullname(fullname);
             user.setPassword(hashPassword);
             user.setPhone(phone);
-
-            // user.getEmail();
-            // user.getFullname();
-            // user.getPhone();
-            // user.getPassword();
             
            User registerdUser= userRepository.save(user);
             return new GeneralResponse("User registered successfully", true,registerdUser);
@@ -151,7 +136,6 @@ public class UserService {
         } else {
             return new GeneralResponse("User not found with id: " + id, false);
         }
-
     }
    
     public  GeneralResponse login(String email,String password ,HttpServletResponse response){
