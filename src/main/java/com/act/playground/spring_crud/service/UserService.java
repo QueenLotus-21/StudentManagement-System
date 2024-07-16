@@ -154,8 +154,7 @@ public class UserService {
 
     }
    
-
-    public  GeneralResponse login(String email,String password){
+    public  GeneralResponse login(String email,String password ,HttpServletResponse response){
       if ( userRepository.existsByEmail(email)) {
         try {
             User user= userRepository.findByEmail(email);
@@ -163,10 +162,9 @@ public class UserService {
             && passwordEncoder.matches(password,user.getPassword());
 
             if (isValid) {
-                //generate token
                 String jwtToken=JwtUtil.generateToken(user);
-                return new GeneralResponse(jwtToken, true);
-                //return new GeneralResponse("login sucessfull" +jwtToken, true,user);
+                setAuthorizationHeader(response, jwtToken);
+                return new GeneralResponse(jwtToken, true);    
             } 
             else{
                 return new GeneralResponse("Access Denied,Invalid Credencial", false);
@@ -183,27 +181,12 @@ public class UserService {
       }
         
     }
-public void setAuthorizationHeader(HttpServletResponse response, GeneralResponse generalResponse) {
-        if (generalResponse.isSuccess()) {
-            // Set the Authorization header in the response
-            response.setHeader("Authorization", "Bearer " + generalResponse.getMessage().toString());
+    public void setAuthorizationHeader(HttpServletResponse response, String jwtToken) {
+        if (jwtToken != null) {
+            response.setHeader("Authorization", "Bearer " + jwtToken);
         } else {
-            // Set the response status to 401 Unauthorized
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
         }
     }
      
-    //public  GeneralResponse login(user){
-    //     Authentication authentication=authenticationManager.authenticate(
-    //         new UsernamePasswordAuthenticationToken(
-    //             user.getFullname(),
-    //             user.getPassword()
-    //         )
-    //     );
-        
-    //     UserDetails userDetails=userDetailsService.loadUserByUsername(user.getFullname());
-    //     //String token=jwtTokenProvider.generateToken(authentication);
-    //     return new GeneralResponse("token", true);
-
-    //}
 }

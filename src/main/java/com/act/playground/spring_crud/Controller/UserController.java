@@ -44,8 +44,7 @@ public class UserController {
     @PostMapping("/login")
     // public ResponseEntity<GeneralResponse> login(@RequestParam("email")String email,@RequestParam("password")String password) {
         public ResponseEntity<GeneralResponse> login(@RequestBody User user ,HttpServletResponse response)  {
-            GeneralResponse loginResponse=userService.login(user.getEmail(),user.getPassword());
-            userService.setAuthorizationHeader(response, loginResponse);
+            GeneralResponse loginResponse=userService.login(user.getEmail(),user.getPassword(),response);
         return ResponseEntity.ok(loginResponse);
     }
     
