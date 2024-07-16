@@ -143,7 +143,7 @@ public class UserService {
                 return new GeneralResponse("User updated successfully ", true,savedUser);
             }
             else{
-                return new GeneralResponse("there is no user detail change ", false);
+                return new GeneralResponse("there is no user details change ", false);
             }
             
         } else {
@@ -152,6 +152,34 @@ public class UserService {
 
     }
    
+
+    public  GeneralResponse login(String email,String password){
+      if ( userRepository.existsByEmail(email)) {
+        try {
+            User user= userRepository.findByEmail(email);
+            //String pass=passwordEncoder.encode(password);
+            boolean isValid=email.equalsIgnoreCase(user.getEmail()) 
+            && passwordEncoder.matches(password,user.getPassword());
+
+            if (isValid) {
+                return new GeneralResponse("login sucessfull", true,user);
+            }
+            else{
+                return new GeneralResponse("Access Denied,Invalid Credencial", false);
+            }
+
+            
+        } catch (Exception e) {
+            return new GeneralResponse(e.getMessage(), false);
+        }
+      
+      }
+      else{
+        return new GeneralResponse("User not found", false);
+      }
+        
+    }
+
      
     //public  GeneralResponse login( User user){
     //     Authentication authentication=authenticationManager.authenticate(

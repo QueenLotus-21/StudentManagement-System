@@ -20,6 +20,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 
+
+
 @RestController
 @RequestMapping("/api/users")
 
@@ -36,6 +38,14 @@ public class UserController {
         return new ResponseEntity<>(userService.registerUser(user.getEmail(),user.getFullname(),user.getPhone(),user.getPassword()), HttpStatus.OK);
     }
 
+
+    @PostMapping("/login")
+    // public ResponseEntity<GeneralResponse> login(@RequestParam("email")String email,@RequestParam("password")String password) {
+        public ResponseEntity<GeneralResponse> login(@RequestBody User user) {
+        return new ResponseEntity<>(userService.login(user.getEmail(),user.getPassword()), HttpStatus.OK);
+    }
+    
+
     @GetMapping("/allUser")
     public ResponseEntity<List<User>> getAlluser() {
         List<User> allUser = userService.getAlluser();
@@ -43,7 +53,7 @@ public class UserController {
     }
 
     @GetMapping("/user/{id}")
-    public ResponseEntity<GeneralResponse> getUserByIde(@PathVariable long id) {
+    public ResponseEntity<GeneralResponse> getUserById(@PathVariable long id) {
         Optional<GeneralResponse> user = userService.getUserById(id);
         return user.map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
     }
