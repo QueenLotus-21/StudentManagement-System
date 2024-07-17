@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.act.playground.spring_crud.Repository.RoleRepository;
+import com.act.playground.spring_crud.dto.PermissionDTO;
 import com.act.playground.spring_crud.model.Role;
 import com.act.playground.spring_crud.response.GeneralResponse;
 
@@ -15,34 +16,31 @@ public class RoleService {
     @Autowired
     private RoleRepository roleRepository;
 
-    // public GeneralResponse createRole(String name,boolean canCreateAdmin,boolean canDeleteAdmin,boolean canReadAdmin,boolean canUpdateAdmin,
-    // boolean canCreateRole,boolean canDeleteRole,boolean canUpdateRole,boolean canReadRole,boolean canCreateTeacher,boolean canDeleteTeacher,
-    // boolean canUpdateTeacher,boolean canReadTeacher,boolean canCreateUser,boolean canDeleteUser,boolean canUpdateUser,boolean canReadUser){
-        public GeneralResponse createRole(Role role){
-        // Role role=new Role();
-        // role.setName(name);
-        // role.setCanCreateAdmin(canCreateAdmin);
-        // role.setCanDeleteAdmin(canDeleteAdmin);
-        // role.setCanUpdateAdmin(canUpdateAdmin);
-        // role.setCanReadAdmin(canReadAdmin);
+    public GeneralResponse createRole(PermissionDTO permissionDTO){
+        Role role=new Role();
+        role.setName(permissionDTO.getName());
+        role.setCanCreateAdmin(permissionDTO.canCreateAdmin());
+        role.setCanUpdateAdmin(permissionDTO.canUpdateAdmin());
+        role.setCanDeleteAdmin(permissionDTO.canDeleteAdmin());
+        role.setCanReadAdmin(permissionDTO.canReadAdmin());
 
-        // role.setCanCreateRole(canCreateRole);
-        // role.setCanUpdateRole(canUpdateRole);
-        // role.setCanReadRole(canReadRole);
-        // role.setCanDeleteRole(canDeleteRole);
+        role.setCanCreateRole(permissionDTO.canCreateRole());
+        role.setCanUpdateRole(permissionDTO.canUpdateRole());
+        role.setCanDeleteRole(permissionDTO.canDeleteRole());
+        role.setCanReadRole(permissionDTO.canReadRole());
 
-        // role.setCanCreateUser(canCreateUser);
-        // role.setCanUpdateUser(canUpdateUser);
-        // role.setCanReadUser(canReadUser);
-        // role.setCanDeleteUser(canDeleteUser);
+        role.setCanCreateUser(permissionDTO.canCreateUser());
+        role.setCanUpdateUser(permissionDTO.canUpdateUser());
+        role.setCanDeleteUser(permissionDTO.canDeleteUser());
+        role.setCanReadUser(permissionDTO.canReadUser());
 
-        // role.setCanCreateTeacher(canCreateTeacher);
-        // role.setCanUpdateTeacher(canUpdateRole);
-        // role.setCanReadTeacher(canReadTeacher);
-        // role.setCanDeleteTeacher(canDeleteTeacher);
+        role.setCanCreateTeacher(permissionDTO.canCreateTeacher());
+        role.setCanUpdateTeacher(permissionDTO.canUpdateTeacher());
+        role.setCanDeleteTeacher(permissionDTO.canDeleteTeacher());
+        role.setCanReadTeacher(permissionDTO.canReadTeacher());
 
        Role createdRole=  roleRepository.save(role);
-       return new GeneralResponse("user Successfully Created", true,createdRole);
+       return new GeneralResponse("role Successfully Created", true,createdRole);
     }
 
     public List<Role> getAllRoles(String name){

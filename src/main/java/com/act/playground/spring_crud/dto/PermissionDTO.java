@@ -1,68 +1,61 @@
-package com.act.playground.spring_crud.model;
+package com.act.playground.spring_crud.dto;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import io.micrometer.common.lang.NonNull;
 
-@Entity
-@Table(name="roles")
-public class Role {  
+public class PermissionDTO {
     
-@Id
- @GeneratedValue(strategy = GenerationType.IDENTITY)
- private Long id;
- 
- @Column(name = "name",nullable = false)
+@NonNull
  private String name;
- @Column(name = "can_create_user")
- private boolean canCreateUser = false;
- @Column(name = "can_Delete_user")
+ private boolean canCreateUser=false;
  private boolean canDeleteUser=false;
- @Column(name = "can_Update_user")
  private boolean canUpdateUser=false;
- @Column(name = "can_Read_user")
  private boolean canReadUser=false;
 
- @Column(name = "can_create_Admin")
+
  private boolean canCreateAdmin=false;
- @Column(name = "can_Delete_Admin")
  private boolean canDeleteAdmin=false;
- @Column(name = "can_Update_Admin")
  private boolean canUpdateAdmin=false;
- @Column(name = "can_Read_Admin")
  private boolean canReadAdmin=false;
 
- @Column(name = "can_create_Role")
+ 
  private boolean canCreateRole=false;
- @Column(name = "can_Delete_Role")
- private boolean canDeleteRole=false;
- @Column(name = "can_Update_Role")
+  private boolean canDeleteRole=false;
  private boolean canUpdateRole=false;
- @Column(name = "can_Read_Role")
- private boolean canReadRole=false;
+  private boolean canReadRole=false;
 
- @Column(name = "can_create_Teacher")
+
  private boolean canCreateTeacher=false;
- @Column(name = "can_Delete_Teacher")
  private boolean canDeleteTeacher=false;
- @Column(name = "can_Update_Teacher")
  private boolean canUpdateTeacher=false;
- @Column(name = "can_Read_Teacher")
  private boolean canReadTeacher=false;
-
- public Role(){}
  
 
 
- public Long getId() {
-    return id;
+
+public PermissionDTO(String name, boolean canCreateUser, boolean canDeleteUser, boolean canUpdateUser,
+        boolean canReadUser, boolean canCreateAdmin, boolean canDeleteAdmin, boolean canUpdateAdmin,
+        boolean canReadAdmin, boolean canCreateRole, boolean canDeleteRole, boolean canUpdateRole, boolean canReadRole,
+        boolean canCreateTeacher, boolean canDeleteTeacher, boolean canUpdateTeacher, boolean canReadTeacher) {
+    this.name = name;
+    this.canCreateUser = canCreateUser;
+    this.canDeleteUser = canDeleteUser;
+    this.canUpdateUser = canUpdateUser;
+    this.canReadUser = canReadUser;
+    this.canCreateAdmin = canCreateAdmin;
+    this.canDeleteAdmin = canDeleteAdmin;
+    this.canUpdateAdmin = canUpdateAdmin;
+    this.canReadAdmin = canReadAdmin;
+    this.canCreateRole = canCreateRole;
+    this.canDeleteRole = canDeleteRole;
+    this.canUpdateRole = canUpdateRole;
+    this.canReadRole = canReadRole;
+    this.canCreateTeacher = canCreateTeacher;
+    this.canDeleteTeacher = canDeleteTeacher;
+    this.canUpdateTeacher = canUpdateTeacher;
+    this.canReadTeacher = canReadTeacher;
 }
-public void setId(Long id) {
-    this.id = id;
-}
+
+
 public String getName() {
     return name;
 }
@@ -165,10 +158,4 @@ public boolean canReadTeacher() {
 public void setCanReadTeacher(boolean canReadTeacher) {
     this.canReadTeacher = canReadTeacher;
 }
-
-
-
-
-
- 
 }
