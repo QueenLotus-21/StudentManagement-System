@@ -7,8 +7,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import com.act.playground.spring_crud.Repository.RoleRepository;
 import com.act.playground.spring_crud.Repository.UserRepository;
 import com.act.playground.spring_crud.Token.JwtUtil;
+import com.act.playground.spring_crud.model.Role;
 import com.act.playground.spring_crud.model.User;
 import com.act.playground.spring_crud.response.GeneralResponse;
 
@@ -20,10 +23,12 @@ import jakarta.servlet.http.HttpServletResponse;
 public class UserService {
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private RoleRepository roleRepository;
     private PasswordEncoder passwordEncoder=new BCryptPasswordEncoder();
     
     
-    public GeneralResponse registerUser(String email,String fullname,String phone,String password){
+    public GeneralResponse registerUser(String email,String fullname,String phone,String password, String roles){
         try {
             
             if (userRepository.existsByEmail(email)) {
@@ -49,11 +54,14 @@ public class UserService {
             }
 
            User user = new User();
+           Role role=roleRepository.findByName(roles);
+           
            String hashPassword= this.passwordEncoder.encode(password);
             user.setEmail(email );
             user.setFullname(fullname);
             user.setPassword(hashPassword);
             user.setPhone(phone);
+            user.setRole(role.getName());
             
            User registerdUser= userRepository.save(user);
             return new GeneralResponse("User registered successfully", true,registerdUser);

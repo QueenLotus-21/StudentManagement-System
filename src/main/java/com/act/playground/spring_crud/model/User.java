@@ -30,6 +30,9 @@ public class User {
     @Column(name = "phone",nullable = false,unique = true)
     private String phone;
 
+    @Column(name="role",nullable = false)
+    private String role;
+
 
     //getter and setter method
 
@@ -43,6 +46,12 @@ public class User {
     }
 
     
+    public String getRole() {
+        return role;
+    }
+    public void setRole(String role) {
+        this.role = role;
+    }
     public void setFullname(String fullname){
         this.fullname=fullname;
     }
