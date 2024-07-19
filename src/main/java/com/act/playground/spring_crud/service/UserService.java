@@ -55,7 +55,6 @@ public class UserService {
 
            User user = new User();
            Role role=roleRepository.findByName(roles);
-           
            String hashPassword= this.passwordEncoder.encode(password);
             user.setEmail(email );
             user.setFullname(fullname);
